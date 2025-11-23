@@ -4,6 +4,8 @@ import requests
 import random
 import string
 import os
+from flask import Flask
+import threading
 
 # ---------------- Settings ----------------
 TOKEN = os.getenv("BOT_TOKEN")   # Secure method
@@ -42,4 +44,19 @@ async def verify(ctx):
 async def lock(ctx, key):
     await ctx.reply("⚙️ HWID lock Roblox script se auto hoga.")
 
+# --------- Simple HTTP server for Render ---------
+app = Flask("")
+
+@app.route("/")
+def home():
+    return "Bot is running!"
+
+def run_flask():
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host="0.0.0.0", port=port)
+
+# Flask server ko alag thread me start karo
+threading.Thread(target=run_flask).start()
+
+# --------- Start Bot ---------
 bot.run(TOKEN)
