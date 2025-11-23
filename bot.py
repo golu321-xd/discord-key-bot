@@ -4,6 +4,8 @@ import requests
 import random
 import string
 import os
+from flask import Flask
+import threading
 
 # ---------------- Settings ----------------
 TOKEN = os.getenv("BOT_TOKEN")   # Discord bot token from Render Environment
@@ -41,6 +43,20 @@ async def verify(ctx):
 @bot.command()
 async def lock(ctx, key):
     await ctx.reply("⚙️ HWID lock Roblox script se auto hoga.")
+
+# --------- Flask server for Render port binding ---------
+app = Flask("")
+
+@app.route("/")
+def home():
+    return "Bot is running!"
+
+def run_flask():
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host="0.0.0.0", port=port)
+
+# Run Flask in a separate thread
+threading.Thread(target=run_flask).start()
 
 # --------- Start Bot ---------
 bot.run(TOKEN)
